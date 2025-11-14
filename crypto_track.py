@@ -8,6 +8,7 @@ import time
 # File to store data
 DATA_FILE = os.path.join("data", "crypto_data.csv")
 
+# Function to fetch cryptocurrency data
 def fetch_crypto_data():
     url = "https://coinmarketcap.com/"
     headers = {"User-Agent": "Mozilla/5.0"}
@@ -16,6 +17,7 @@ def fetch_crypto_data():
 
     data = []
     rows = soup.find_all("tr")[1:11]  # top 10 coins
+
     for row in rows:
         columns = row.find_all("td")
         if len(columns) > 4:
@@ -24,19 +26,29 @@ def fetch_crypto_data():
             change = columns[4].text.strip()
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             data.append([name, price, change, timestamp])
+
     return data
 
+
+# Function to save data into CSV
 def save_to_csv(data):
     df = pd.DataFrame(data, columns=["Name", "Price", "Change", "Timestamp"])
     os.makedirs("data", exist_ok=True)
+
     if os.path.exists(DATA_FILE):
         df.to_csv(DATA_FILE, mode="a", header=False, index=False)
     else:
         df.to_csv(DATA_FILE, index=False)
+
     print(f"[{datetime.now()}] Saved {len(data)} entries")
 
+
+# Main loop
 if __name__ == "__main__":
     while True:
+        print("Loop started...")
         crypto_data = fetch_crypto_data()
+        print("Fetched data:",crypto_data)
         save_to_csv(crypto_data)
-        time.sleep(60)  
+        
+        time.sleep(60) 
