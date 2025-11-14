@@ -51,4 +51,4 @@ if __name__ == "__main__":
         print("Fetched data:",crypto_data)
         save_to_csv(crypto_data)
         
-        time.sleep(60) 
+        time.sleep(60)  
